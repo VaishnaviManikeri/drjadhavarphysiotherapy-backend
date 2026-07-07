@@ -1,0 +1,103 @@
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import dotenv from 'dotenv';
+
+import authRoutes from './routes/authRoutes.js';
+import galleryRoutes from './routes/galleryRoutes.js';
+import blogRoutes from './routes/blogRoutes.js';
+// import noticeRoutes from './routes/noticeRoutes.js';
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+// ===============================
+// CORS Configuration
+// ===============================
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'https://drjadhavarphysiotherapy.com',
+    'https://www.drjadhavarphysiotherapy.com'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// ===============================
+// Middleware
+// ===============================
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// ===============================
+// Health Check Route
+// ===============================
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Dr. Jadhavar Physiotherapy Backend is Running Successfully 🚀'
+  });
+});
+
+// ===============================
+// API Routes
+// ===============================
+app.use('/api/auth', authRoutes);
+app.use('/api/gallery', galleryRoutes);
+app.use('/api/blogs', blogRoutes);
+// app.use('/api/notices', noticeRoutes);
+
+// ===============================
+// Error Handling Middleware
+// ===============================
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    return res.status(413).json({
+      message: 'File is too large. Maximum upload size is 100 MB.'
+    });
+  }
+
+  if (err.message?.includes('File size too large')) {
+    return res.status(413).json({
+      message: 'Cloudinary rejected this file after processing. Try a smaller image or video.'
+    });
+  }
+
+  res.status(500).json({
+    success: false,
+    message: 'Something went wrong!',
+    error: err.message
+  });
+});
+
+// ===============================
+// MongoDB Connection & Start Server
+// ===============================
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => {
+    console.log('====================================');
+    console.log('✅ MongoDB Connected Successfully');
+    console.log('====================================');
+
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log('====================================');
+      console.log('🚀 Backend Server Started Successfully');
+      console.log(`🌐 Local URL   : http://localhost:${PORT}`);
+      console.log(`🌍 VPS URL     : http://YOUR_VPS_IP:${PORT}`);
+      console.log('🔗 API Status  : http://YOUR_VPS_IP:' + PORT + '/');
+      console.log('====================================');
+    });
+  })
+  .catch((error) => {
+    console.error('====================================');
+    console.error('❌ MongoDB Connection Failed');
+    console.error(error.message);
+    console.error('====================================');
+    process.exit(1);
+  });
