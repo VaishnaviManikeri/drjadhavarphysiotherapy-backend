@@ -11,7 +11,7 @@ import blogRoutes from './routes/blogRoutes.js';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5031;
 
 // ===============================
 // CORS Configuration
@@ -77,27 +77,32 @@ app.use((err, req, res, next) => {
 });
 
 // ===============================
-// MongoDB Connection & Start Server
+// MongoDB Connection
 // ===============================
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
-    console.log('====================================');
+    console.log('========================================');
     console.log('✅ MongoDB Connected Successfully');
-    console.log('====================================');
+    console.log('========================================');
 
     app.listen(PORT, '0.0.0.0', () => {
-      console.log('====================================');
-      console.log('🚀 Backend Server Started Successfully');
-      console.log(`🌐 Local URL   : http://localhost:${PORT}`);
-      console.log(`🌍 VPS URL     : http://YOUR_VPS_IP:${PORT}`);
-      console.log('🔗 API Status  : http://YOUR_VPS_IP:' + PORT + '/');
-      console.log('====================================');
+      console.log('');
+      console.log('🚀====================================🚀');
+      console.log('      BACKEND STARTED SUCCESSFULLY');
+      console.log('🚀====================================🚀');
+      console.log(`📌 Local Server : http://localhost:${PORT}`);
+      console.log(`🌐 Website      : https://drjadhavarphysiotherapy.com`);
+      console.log(`🔗 API Base URL : https://drjadhavarphysiotherapy.com/api`);
+      console.log(`❤️ Health Check : https://drjadhavarphysiotherapy.com/`);
+      console.log(`⚡ Running Port : ${PORT}`);
+      console.log('========================================');
+      console.log('');
     });
   })
   .catch((error) => {
-    console.error('====================================');
+    console.error('========================================');
     console.error('❌ MongoDB Connection Failed');
     console.error(error.message);
-    console.error('====================================');
+    console.error('========================================');
     process.exit(1);
   });
