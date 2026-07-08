@@ -20,7 +20,8 @@ app.use(cors({
   origin: [
     'http://localhost:5173',
     'https://drjadhavarphysiotherapy.com',
-    'https://www.drjadhavarphysiotherapy.com'
+    'https://www.drjadhavarphysiotherapy.com',
+    'https://gentle-puffpuff-fa2d0e.netlify.app'
   ],
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   credentials: true,
