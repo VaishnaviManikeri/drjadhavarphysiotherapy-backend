@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes.js';
 import galleryRoutes from './routes/galleryRoutes.js';
 import blogRoutes from './routes/blogRoutes.js';
-// import noticeRoutes from './routes/noticeRoutes.js';
+import appointmentRoutes from './routes/appointmentRoutes.js'; // Add this line
 
 dotenv.config();
 
@@ -50,7 +50,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/gallery', galleryRoutes);
 app.use('/api/blogs', blogRoutes);
-// app.use('/api/notices', noticeRoutes);
+app.use('/api/appointments', appointmentRoutes); // Add this line
 
 // ===============================
 // Error Handling Middleware
