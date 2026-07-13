@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes.js';
 import galleryRoutes from './routes/galleryRoutes.js';
 import blogRoutes from './routes/blogRoutes.js';
-import appointmentRoutes from './routes/appointmentRoutes.js';
+// import noticeRoutes from './routes/noticeRoutes.js';
 
 dotenv.config();
 
@@ -16,35 +16,17 @@ const PORT = process.env.PORT || 5031;
 // ===============================
 // CORS Configuration
 // ===============================
-const allowedOrigins = [
-  'http://localhost:5173',
-  'http://localhost:3000',
-  'https://drjadhavarphysiotherapy.com',
-  'https://www.drjadhavarphysiotherapy.com',
-  'https://gentle-puffpuff-fa2d0e.netlify.app',
-  // Add your Netlify or Vercel deployment URL
-  'https://your-netlify-app.netlify.app'
-];
-
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
-      callback(null, true);
-    } else {
-      console.log('Blocked origin:', origin);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: [
+    'http://localhost:5173',
+    'https://drjadhavarphysiotherapy.com',
+    'https://www.drjadhavarphysiotherapy.com',
+    'https://gentle-puffpuff-fa2d0e.netlify.app'
+  ],
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
-  exposedHeaders: ['Content-Range', 'X-Content-Range']
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
-
-// Handle preflight requests explicitly
 
 // ===============================
 // Middleware
@@ -68,7 +50,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/gallery', galleryRoutes);
 app.use('/api/blogs', blogRoutes);
-app.use('/api/appointments', appointmentRoutes);
+// app.use('/api/notices', noticeRoutes);
 
 // ===============================
 // Error Handling Middleware
@@ -111,8 +93,8 @@ mongoose.connect(process.env.MONGODB_URI)
       console.log('🚀====================================🚀');
       console.log(`📌 Local Server : http://localhost:${PORT}`);
       console.log(`🌐 Website      : https://drjadhavarphysiotherapy.com`);
-      console.log(`🔗 API Base URL : https://api.drjadhavarphysiotherapy.com/api`);
-      console.log(`❤️ Health Check : https://api.drjadhavarphysiotherapy.com/`);
+      console.log(`🔗 API Base URL : https://drjadhavarphysiotherapy.com/api`);
+      console.log(`❤️ Health Check : https://drjadhavarphysiotherapy.com/`);
       console.log(`⚡ Running Port : ${PORT}`);
       console.log('========================================');
       console.log('');
