@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes.js';
 import galleryRoutes from './routes/galleryRoutes.js';
 import blogRoutes from './routes/blogRoutes.js';
-import appointmentRoutes from './routes/appointmentRoutes.js'; // Add this line
+import appointmentRoutes from './routes/appointmentRoutes.js';
 
 dotenv.config();
 
@@ -14,19 +14,36 @@ const app = express();
 const PORT = process.env.PORT || 5031;
 
 // ===============================
-// CORS Configuration
+// CORS Configuration - UPDATED
 // ===============================
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'http://localhost:5000',
+  'https://drjadhavarphysiotherapy.com',
+  'https://www.drjadhavarphysiotherapy.com',
+  'https://gentle-puffpuff-fa2d0e.netlify.app'
+];
+
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'https://drjadhavarphysiotherapy.com',
-    'https://www.drjadhavarphysiotherapy.com',
-    'https://gentle-puffpuff-fa2d0e.netlify.app'
-  ],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('Blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range']
 }));
+
+// Handle preflight requests explicitly
 
 // ===============================
 // Middleware
@@ -50,7 +67,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/gallery', galleryRoutes);
 app.use('/api/blogs', blogRoutes);
-app.use('/api/appointments', appointmentRoutes); // Add this line
+app.use('/api/appointments', appointmentRoutes);
 
 // ===============================
 // Error Handling Middleware
